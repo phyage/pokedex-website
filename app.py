@@ -87,8 +87,11 @@ def login():
 
 @app.route("/profile")
 def profile():
-    # A placeholder: you'll build the real page in Activity 4
-    return f"<h1>Logged in as {session.get('username')}</h1><a href='/logout'>Log out</a>"
+    if not session.get("user_id"):
+        flash("Please log in to access your Pokédex.", "error")
+        return redirect(url_for("login"))
+
+    return render_template("profile.html")
 
 
 @app.route("/logout")

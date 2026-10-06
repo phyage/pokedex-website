@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Prototype{% endblock %} | DevHub</title>
+  <title>{% block title %}Prototype{% endblock %} | pokedex</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="site-header">
-    <a class="logo" href="{{ url_for('index') }}">DevHub</a>
+    <a class="logo" href="{{ url_for('index') }}">pokedex</a>
     <nav>
       {% if session.get('user_id') %}
         <a href="{{ url_for('profile') }}">{{ session['username'] }}</a>
