@@ -46,7 +46,6 @@ def register():
                 )
             conn.commit()
         except pymysql.err.IntegrityError:
-            # UNIQUE columns stop duplicate usernames and emails
             flash("That username or email is already taken.", "error")
             return render_template("register.html")
         finally:
