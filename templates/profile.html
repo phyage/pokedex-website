@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<section class="dashboard">
+    <div class="dashboard-header">
+        <div>
+            <p class="eyebrow">POKÉDEX</p>
+            <h1>Welcome back, {{ session['username'] }}!</h1>
+            <p class="dashboard-subtitle">
+                explore the Pokédex.
+            </p>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+
+        <a href="#" class="dashboard-card pokedex-card">
+            <div>
+                <h2>Pokédex</h2>
+                <p>Explore Pokémon, their types, abilities and stats.</p>
+            </div>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <a href="#" class="dashboard-card collection-card">
+            <div class="card-icon">★</div>
+            <div>
+                <h2>My Collection</h2>
+                <p>View and manage the Pokémon you have collected.</p>
+            </div>
+            <span class="card-arrow">→</span>
+        </a>
+
+    </div>
+
+    <section class="quick-start">
+        <div>
+            <p class="eyebrow">READY?</p>
+            <h2>Start exploring the Pokédex.</h2>
+            <p>
+                Search through Pokémon and learn more about their stats,
+                types, abilities and more.
+            </p>
+        </div>
+
+        <a href="#" class="button">Open Pokédex →</a>
+    </section>
+
+</section>
+
+{% endblock %}
+```

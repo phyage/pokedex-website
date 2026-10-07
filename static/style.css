@@ -1,0 +1,95 @@
+:root {
+  --ink: #1d2733;
+  --muted: #5b6776;
+  --page: #eef1f5;
+  --panel: #fcfdfe;
+  --brand: #0f6b6b;
+  --brand-dark: #0a4f4f;
+  --line: #d5dbe3;
+  --error: #a4262c;
+  --success: #1e6b34;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--ink);
+  background: var(--page);
+  line-height: 1.5;
+}
+
+a { color: var(--brand); }
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: var(--ink);
+}
+.site-header a { color: #fff; text-decoration: none; margin-left: 1rem; }
+.site-header .logo { font-weight: 800; font-size: 1.25rem; margin-left: 0; }
+
+.container { max-width: 34rem; margin: 2.5rem auto; padding: 0 1rem; }
+
+.hero h1 { font-size: 2.5rem; line-height: 1.1; margin-bottom: 0.5rem; }
+.hero p { color: var(--muted); font-size: 1.125rem; }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+label { display: block; font-weight: 600; margin: 1rem 0 0.25rem; }
+input, textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+}
+input:focus, textarea:focus, button:focus-visible, a:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+
+button, .button {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1.25rem;
+  border: 0;
+  border-radius: 8px;
+  background: var(--brand);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+button:hover, .button:hover { background: var(--brand-dark); }
+.site-header .button { margin-top: 0; padding: 0.4rem 0.9rem; }
+
+.flash { padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; }
+.flash-error { background: #fbe9ea; color: var(--error); }
+.flash-success { background: #e6f4ea; color: var(--success); }
+
+.small { color: var(--muted); font-size: 0.9rem; }
+
+.profile .avatar {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--brand);
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+dl { margin: 1.5rem 0 0; }
+dt { font-weight: 600; margin-top: 1rem; }
+dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }

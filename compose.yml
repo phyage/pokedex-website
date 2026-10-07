@@ -1,0 +1,46 @@
+services:
+  web:
+    build: .
+    container_name: flask-web
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: db
+      DB_USER: flaskuser
+      DB_PASSWORD: flaskpass
+      DB_NAME: prototype
+      SECRET_KEY: 3hhh2kk4llll
+    volumes:
+      - .:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mariadb:11.4
+    container_name: flask-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass123
+      MARIADB_DATABASE: prototype
+      MARIADB_USER: flaskuser
+      MARIADB_PASSWORD: flaskpass
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db/int.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+     test: ["CMD", "healthcheck.sh", "--connect"]
+     interval: 5s
+     timeout: 5s
+     retries: 10
+
+  adminer:
+    image: adminer
+    container_name: flask-adminer
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
