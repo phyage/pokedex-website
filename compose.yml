@@ -9,7 +9,7 @@ services:
       DB_USER: flaskuser
       DB_PASSWORD: flaskpass
       DB_NAME: prototype
-      SECRET_KEY: 3hhh2kk4llll
+      SECRET_KEY: ${SECRET_KEY}
     volumes:
       - .:/app
     depends_on:
