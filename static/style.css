@@ -48,7 +48,7 @@ a {
   letter-spacing: 0.5px;
 }
 
-.container { max-width: 34rem; margin: 2.5rem auto; padding: 0 1rem; }
+.container { max-width: 60rem; margin: 2.5rem auto; padding: 0 1rem; }
 
 .hero h1 { 
   font-size: 2.5rem; 
@@ -186,4 +186,30 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
 .dropdown-item:hover {
   background-color: var(--accent, #ffcb05);
   color: var(--ink, #212121);
+}
+
+#pokemon-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+#pokemon-card > header {
+    grid-column: 1 / -1;
+}
+
+.pokemon-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pokemon-image img {
+    width: 100%;
+    max-width: 300px;
+}
+
+#pokemon-card > section {
+    grid-column: 2;
 }

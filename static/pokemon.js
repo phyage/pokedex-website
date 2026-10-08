@@ -1,4 +1,3 @@
-console.log("Pokédex JavaScript loaded!");
 
 const searchForm = document.getElementById("pokemon-search-form");
 const searchInput = document.getElementById("pokemon-search");
@@ -220,7 +219,7 @@ searchInput.addEventListener("input", function () {
     // Filter matching Pokémon that start with the letter entered (max 6 items)
     const matches = allPokemonList
         .filter(pokemon => pokemon.name.toLowerCase().startsWith(query))
-        .slice(0, 6);
+        .slice(0, 20);
 
     if (matches.length === 0) {
         hideDropdown();
