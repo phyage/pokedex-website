@@ -189,3 +189,78 @@ function formatStatName(stat) {
 
 }
 
+// Dropdown element references
+const dropdown = document.getElementById("pokemon-dropdown");
+let allPokemonList = []; 
+
+// Fetch the full list of Pokémon names once when the script loads
+async function loadPokemonList() {
+    try {
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1025");
+        if (!response.ok) return;
+        const data = await response.json();
+        allPokemonList = data.results;
+    } catch (err) {
+        console.error("Failed to load Pokémon list for autocomplete:", err);
+    }
+}
+
+loadPokemonList();
+
+// Listen for typing in the search input
+searchInput.addEventListener("input", function () {
+    const query = searchInput.value.trim().toLowerCase();
+
+    // Hide dropdown if query is empty or list isn't ready
+    if (!query || allPokemonList.length === 0) {
+        hideDropdown();
+        return;
+    }
+
+    // Filter matching Pokémon that start with the letter entered (max 6 items)
+    const matches = allPokemonList
+        .filter(pokemon => pokemon.name.toLowerCase().startsWith(query))
+        .slice(0, 6);
+
+    if (matches.length === 0) {
+        hideDropdown();
+        return;
+    }
+
+    renderDropdown(matches);
+});
+
+// Render suggestions into the list
+function renderDropdown(matches) {
+    dropdown.innerHTML = "";
+
+    matches.forEach(pokemon => {
+        const li = document.createElement("li");
+        li.className = "dropdown-item";
+        li.textContent = capitalise(pokemon.name);
+
+        // On clicking an item in the dropdown
+        li.addEventListener("click", function () {
+            searchInput.value = pokemon.name;
+            hideDropdown();
+            getPokemon(pokemon.name); // Automatically trigger search
+        });
+
+        dropdown.appendChild(li);
+    });
+
+    dropdown.hidden = false;
+}
+
+function hideDropdown() {
+    dropdown.hidden = true;
+    dropdown.innerHTML = "";
+}
+
+// Hide dropdown when user clicks outside the search form
+document.addEventListener("click", function (event) {
+    if (!searchForm.contains(event.target)) {
+        hideDropdown();
+    }
+});
+

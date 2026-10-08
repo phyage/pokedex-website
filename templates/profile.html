@@ -16,8 +16,9 @@
 
         <h2>Search Pokémon</h2>
 
-        <form id="pokemon-search-form">
+    <form id="pokemon-search-form">
 
+        <div class="search-input-wrapper">
             <label for="pokemon-search">
                 Pokémon name or Pokédex number
             </label>
@@ -31,13 +32,17 @@
                 required
             >
 
-            <button type="submit">
-                Search
-            </button>
+            <!-- Dropdown container added here -->
+            <ul id="pokemon-dropdown" class="search-dropdown" hidden></ul>
+        </div>
 
-        </form>
+        <button type="submit">
+            Search
+        </button>
 
-        <p id="search-error"></p>
+     </form>
+
+    <p id="search-error"></p>
 
     </section>
 
