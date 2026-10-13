@@ -20,6 +20,18 @@ const previousPokemon = document.getElementById("previous-pokemon");
 const nextPokemon = document.getElementById("next-pokemon");
 
 let currentPokemonId = null;
+let currentSpeciesId = null;
+
+// Build the forms section and add it to the card
+const formsSection = document.createElement("section");
+formsSection.className = "pokemon-forms";
+formsSection.hidden = true;
+formsSection.innerHTML = `<h2>Forms</h2><ul id="pokemon-forms-list" class="forms-list"></ul>`;
+pokemonCard.appendChild(formsSection);
+const formsList = document.getElementById("pokemon-forms-list");
+
+// Put the prev/next buttons above the card
+pokemonCard.before(navigation);
 
 
 searchForm.addEventListener("submit", function (event) {
@@ -75,6 +87,8 @@ async function getPokemon(pokemon) {
 function displayPokemon(pokemon) {
 
     currentPokemonId = pokemon.id;
+    // Species number is used for prev/next so forms don't break the order
+    currentSpeciesId = Number(pokemon.species.url.split("/").filter(Boolean).pop());
 
     placeholder.hidden = true;
     pokemonCard.hidden = false;
@@ -111,24 +125,26 @@ function displayPokemon(pokemon) {
     });
     navigation.hidden = false;
     previousPokemon.disabled =
-        pokemon.id <= 1;
+        currentSpeciesId <= 1;
     nextPokemon.disabled =
-        pokemon.id >= 1025;
+        currentSpeciesId >= 1025;
+
+    loadForms(pokemon);
 
 }
 
 previousPokemon.addEventListener("click", function () {
 
-    if (currentPokemonId > 1) {
-        getPokemon(currentPokemonId - 1);
+    if (currentSpeciesId > 1) {
+        getPokemon(currentSpeciesId - 1);
     }
 
 });
 
 nextPokemon.addEventListener("click", function () {
 
-    if (currentPokemonId < 1025) {
-        getPokemon(currentPokemonId + 1);
+    if (currentSpeciesId < 1025) {
+        getPokemon(currentSpeciesId + 1);
     }
 
 });
@@ -152,6 +168,59 @@ function formatStatName(stat) {
 
     return names[stat] || capitalise(stat);
 
+}
+
+
+// Fetch all forms of a Pokémon's species and show them in the table
+async function loadForms(pokemon) {
+
+    formsList.innerHTML = "";
+    formsSection.hidden = true;
+
+    try {
+
+        const response = await fetch(pokemon.species.url);
+        if (!response.ok) return;
+        const species = await response.json();
+
+        // Ignore the result if the user has already moved to another Pokémon
+        if (currentPokemonId !== pokemon.id) return;
+
+        // Only show the table if there is more than one form
+        if (species.varieties.length <= 1) return;
+
+        species.varieties.forEach(variety => {
+
+            const li = document.createElement("li");
+            li.className = "form-item";
+            li.textContent = formatFormName(variety.pokemon.name);
+
+            // Highlight the form currently being viewed
+            if (variety.pokemon.name === pokemon.name) {
+                li.classList.add("current");
+            }
+
+            // On clicking a form, load that page
+            li.addEventListener("click", function () {
+                searchInput.value = variety.pokemon.name;
+                getPokemon(variety.pokemon.name);
+            });
+
+            formsList.appendChild(li);
+
+        });
+
+        formsSection.hidden = false;
+
+    } catch (err) {
+        console.error("Failed to load forms:", err);
+    }
+
+}
+
+// remove the - in the middle of the different forms 
+function formatFormName(name) {
+    return name.split("-").map(capitalise).join(" ");
 }
 
 // Dropdown element references
@@ -182,10 +251,9 @@ searchInput.addEventListener("input", function () {
         return;
     }
 
-    // Filter matching Pokémon that start with the letter entered (max 6 items)
+    // Filter matching Pokémon that start with the letter entered (no limit)
     const matches = allPokemonList
         .filter(pokemon => pokemon.name.toLowerCase().startsWith(query))
-        .slice(0, 20);
 
     if (matches.length === 0) {
         hideDropdown();
@@ -228,4 +296,3 @@ document.addEventListener("click", function (event) {
         hideDropdown();
     }
 });
-

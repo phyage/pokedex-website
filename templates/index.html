@@ -4,8 +4,8 @@
 
 {% block content %}
   <section class="hero">
-    <h1>Share what you're building.</h1>
-    <p>Make a profile, tell people what you code in, and keep it up to date.</p>
+    <h1>Welcome to the pokedex website</h1>
+    <p>Make a profile and access the full range of the pokedex showing stats and forms.</p>
 
     {% if session.get('user_id') %}
       <a class="button" href="{{ url_for('profile') }}">Go to your profile</a>

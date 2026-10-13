@@ -213,3 +213,38 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
 #pokemon-card > section {
     grid-column: 2;
 }
+
+.pokemon-forms h2 {
+    margin-top: 0;
+}
+
+.forms-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 2px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.form-item {
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    border-bottom: 1px solid var(--line);
+    transition: background-color 0.15s ease;
+}
+
+.form-item:last-child {
+    border-bottom: none;
+}
+
+.form-item:hover {
+    background-color: var(--accent);
+}
+
+/* Form currently being viewed */
+.form-item.current {
+    background-color: var(--brand);
+    color: #fff;
+}
