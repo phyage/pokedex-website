@@ -27,11 +27,9 @@ searchForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const searchValue = searchInput.value.trim().toLowerCase();
-
     if (!searchValue) {
         return;
     }
-
     getPokemon(searchValue);
 
 });
@@ -79,18 +77,9 @@ function displayPokemon(pokemon) {
     currentPokemonId = pokemon.id;
 
     placeholder.hidden = true;
-
-
-
     pokemonCard.hidden = false;
-
-
-
     pokemonName.textContent = capitalise(pokemon.name);
-
     pokemonId.textContent = pokemon.id;
-
-
     pokemonSprite.src =
         pokemon.sprites.other["official-artwork"].front_default
         || pokemon.sprites.front_default;
@@ -98,20 +87,15 @@ function displayPokemon(pokemon) {
     pokemonSprite.alt =
         `${capitalise(pokemon.name)} sprite`;
 
-
     pokemonTypes.textContent = pokemon.types
         .map(type => capitalise(type.type.name))
         .join(", ");
 
-
-
     pokemonHeight.textContent =
         `${pokemon.height / 10} m`;
 
-
     pokemonWeight.textContent =
         `${pokemon.weight / 10} kg`;
-
 
     pokemonStats.innerHTML = "";
 
@@ -125,48 +109,31 @@ function displayPokemon(pokemon) {
         pokemonStats.appendChild(listItem);
 
     });
-
-
-
     navigation.hidden = false;
-
-
     previousPokemon.disabled =
         pokemon.id <= 1;
-
-
-
     nextPokemon.disabled =
         pokemon.id >= 1025;
 
 }
 
-
 previousPokemon.addEventListener("click", function () {
 
     if (currentPokemonId > 1) {
-
         getPokemon(currentPokemonId - 1);
-
     }
 
 });
-
 
 nextPokemon.addEventListener("click", function () {
 
     if (currentPokemonId < 1025) {
-
         getPokemon(currentPokemonId + 1);
-
     }
 
 });
 
-
-
 function capitalise(name) {
-
     return name.charAt(0).toUpperCase() + name.slice(1);
 
 }
