@@ -1,4 +1,3 @@
-
 const searchForm = document.getElementById("pokemon-search-form");
 const searchInput = document.getElementById("pokemon-search");
 const searchError = document.getElementById("search-error");
