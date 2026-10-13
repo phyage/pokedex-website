@@ -18,7 +18,7 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   color: var(--ink);
   background: var(--page);
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
 a { 
@@ -30,7 +30,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   background: var(--brand);
   border-bottom: 5px solid var(--ink);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -48,28 +48,28 @@ a {
   letter-spacing: 0.5px;
 }
 
-.container { max-width: 60rem; margin: 2.5rem auto; padding: 0 1rem; }
+.container { max-width: 60rem; margin: 1.25rem auto; padding: 0 1rem; }
 
 .hero h1 { 
-  font-size: 2.5rem; 
+  font-size: 1.75rem; 
   line-height: 1.1; 
-  margin-bottom: 0.5rem; 
+  margin: 0 0 0.25rem; 
   color: var(--ink);
 }
-.hero p { color: var(--muted); font-size: 1.125rem; }
+.hero p { color: var(--muted); font-size: 1rem; margin: 0 0 0.75rem; }
 
 .panel {
   background: var(--panel);
   border: 2px solid var(--line);
   border-radius: 16px;
-  padding: 2rem;
+  padding: 1.25rem;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
 }
 
-label { display: block; font-weight: 600; margin: 1rem 0 0.25rem; }
+label { display: block; font-weight: 600; margin: 0.5rem 0 0.25rem; }
 input, textarea {
   width: 100%;
-  padding: 0.6rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   border: 2px solid var(--line);
   border-radius: 8px;
   font: inherit;
@@ -83,8 +83,8 @@ input:focus, textarea:focus, button:focus-visible, a:focus-visible {
 
 button, .button {
   display: inline-block;
-  margin-top: 1.25rem;
-  padding: 0.65rem 1.5rem;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1.25rem;
   border: 0;
   border-radius: 50px;
   background: var(--brand);
@@ -144,8 +144,8 @@ button:active, .button:active {
   border: 3px solid var(--ink);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
-dl { margin: 1.5rem 0 0; }
-dt { font-weight: 600; margin-top: 1rem; }
+dl { margin: 1rem 0 0; }
+dt { font-weight: 600; margin-top: 0.5rem; }
 dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
 
 .search-input-wrapper {
@@ -188,10 +188,23 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
   color: var(--ink, #212121);
 }
 
+/* Prev/next buttons sit above the card, side by side */
+#pokemon-navigation {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+#pokemon-navigation button {
+    margin-top: 0;
+}
+
+/* Smaller image column so the info sits beside it */
 #pokemon-card {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+    grid-template-columns: 220px 1fr;
+    gap: 0.75rem 1.5rem;
     align-items: start;
 }
 
@@ -199,7 +212,20 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
     grid-column: 1 / -1;
 }
 
+/* Tighter headings inside the card */
+#pokemon-card h1,
+#pokemon-card h2,
+#pokemon-card h3 {
+    margin: 0 0 0.25rem;
+    line-height: 1.2;
+}
+
+#pokemon-card p {
+    margin: 0.25rem 0;
+}
+
 .pokemon-image {
+    grid-row: span 2; /* Image stays beside the details and stats */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -207,11 +233,26 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
 
 .pokemon-image img {
     width: 100%;
-    max-width: 300px;
+    max-width: 220px;
 }
 
 #pokemon-card > section {
     grid-column: 2;
+}
+
+/* Stats in two columns instead of one tall list */
+#pokemon-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Forms take the full width under the card as a wrapped row */
+#pokemon-card > section.pokemon-forms {
+    grid-column: 1 / -1;
 }
 
 .pokemon-forms h2 {
@@ -219,24 +260,21 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
 }
 
 .forms-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
     list-style: none;
     margin: 0;
     padding: 0;
-    border: 2px solid var(--line);
-    border-radius: 12px;
-    overflow: hidden;
 }
 
 .form-item {
-    padding: 0.65rem 1rem;
+    padding: 0.3rem 0.9rem;
     cursor: pointer;
     font-weight: 600;
-    border-bottom: 1px solid var(--line);
+    border: 2px solid var(--line);
+    border-radius: 50px;
     transition: background-color 0.15s ease;
-}
-
-.form-item:last-child {
-    border-bottom: none;
 }
 
 .form-item:hover {
@@ -246,5 +284,21 @@ dd { margin: 0.25rem 0 0; color: var(--muted); white-space: pre-line; }
 /* Form currently being viewed */
 .form-item.current {
     background-color: var(--brand);
+    border-color: var(--brand);
     color: #fff;
+}
+
+/* Stack everything on small screens */
+@media (max-width: 600px) {
+    #pokemon-card {
+        grid-template-columns: 1fr;
+    }
+
+    #pokemon-card > section {
+        grid-column: 1;
+    }
+
+    .pokemon-image {
+        grid-row: auto;
+    }
 }
