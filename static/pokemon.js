@@ -19,6 +19,8 @@ const navigation = document.getElementById("pokemon-navigation");
 const previousPokemon = document.getElementById("previous-pokemon");
 const nextPokemon = document.getElementById("next-pokemon");
 
+const teamPokemonId = document.getElementById("team-pokemon-id");
+
 let currentPokemonId = null;
 let currentSpeciesId = null;
 
@@ -87,6 +89,7 @@ async function getPokemon(pokemon) {
 function displayPokemon(pokemon) {
 
     currentPokemonId = pokemon.id;
+    teamPokemonId.value = pokemon.id;
     // Species number is used for prev/next so forms don't break the order
     currentSpeciesId = Number(pokemon.species.url.split("/").filter(Boolean).pop());
 

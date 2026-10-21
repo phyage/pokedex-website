@@ -8,8 +8,6 @@
 <section class="pokedex">
 
     <header class="pokedex-header">
-        <h1></h1>
-        <p></p>
     </header>
 
     <section class="pokemon-search">
@@ -65,6 +63,20 @@
                 </p>
 
             </header>
+
+        <form action="{{ url_for('add_to_team') }}" method="POST">
+            <input
+                type="hidden"
+                id="team-pokemon-id"
+                name="pokemon_id"
+                value=""
+            >
+
+            <button type="submit" id="add-to-team-button">
+                Add to Team
+            </button>
+        </form>
+
 
 
             <div class="pokemon-image">

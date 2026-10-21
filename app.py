@@ -93,6 +93,124 @@ def profile():
     return render_template("profile.html")
 
 
+@app.route("/team")
+def team():
+    if not session.get("user_id"):
+        flash("Please log in to view your team.", "error")
+        return redirect(url_for("login"))
+
+    conn = get_db()
+
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "SELECT pokemon_id FROM user_team "
+                "WHERE user_id = %s ORDER BY added_at, id",
+                (session["user_id"],),
+            )
+            team_pokemon = cur.fetchall()
+    finally:
+        conn.close()
+
+    return render_template("team.html", team=team_pokemon)
+
+
+
+@app.route("/team/add", methods=["POST"])
+def add_to_team():
+    # Make sure the user is logged in.
+    if not session.get("user_id"):
+        flash("Please log in to build your team.", "error")
+        return redirect(url_for("login"))
+
+    # Get the Pokémon ID sent by the form.
+    try:
+        pokemon_id = int(request.form.get("pokemon_id", ""))
+    except ValueError:
+        flash("Invalid Pokémon.", "error")
+        return redirect(url_for("profile"))
+
+    if not 1 <= pokemon_id <= 1025:
+        flash("Invalid Pokémon.", "error")
+        return redirect(url_for("profile"))
+
+    user_id = session["user_id"]
+    conn = get_db()
+
+    try:
+        with conn.cursor() as cur:
+            # Check whether this Pokémon is already on the team.
+            cur.execute(
+                "SELECT id FROM user_team "
+                "WHERE user_id = %s AND pokemon_id = %s",
+                (user_id, pokemon_id),
+            )
+
+            if cur.fetchone():
+                flash("That Pokémon is already on your team.", "error")
+                return redirect(url_for("profile"))
+
+            # Check the team's current size.
+            cur.execute(
+                "SELECT COUNT(*) AS total FROM user_team "
+                "WHERE user_id = %s",
+                (user_id,),
+            )
+            team_size = cur.fetchone()["total"]
+
+            if team_size >= 6:
+                flash("Your team is full! Remove a Pokémon first.", "error")
+                return redirect(url_for("profile"))
+
+            # Add the Pokémon to the database.
+            cur.execute(
+                "INSERT INTO user_team (user_id, pokemon_id) "
+                "VALUES (%s, %s)",
+                (user_id, pokemon_id),
+            )
+
+        conn.commit()
+        flash("Pokémon added to your team!", "success")
+
+    finally:
+        conn.close()
+
+    return redirect(url_for("profile"))
+
+
+@app.route("/team/remove", methods=["POST"])
+def remove_from_team():
+    # Make sure the user is logged in.
+    if not session.get("user_id"):
+        flash("Please log in to manage your team.", "error")
+        return redirect(url_for("login"))
+
+    try:
+        pokemon_id = int(request.form.get("pokemon_id", ""))
+    except ValueError:
+        flash("Invalid Pokémon.", "error")
+        return redirect(url_for("team"))
+
+    conn = get_db()
+
+    try:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM user_team "
+                "WHERE user_id = %s AND pokemon_id = %s",
+                (session["user_id"], pokemon_id),
+            )
+
+        conn.commit()
+        flash("Pokémon removed from your team.", "success")
+
+    finally:
+        conn.close()
+
+    return redirect(url_for("profile"))
+
+
+
 @app.route("/logout")
 def logout():
     session.clear()
