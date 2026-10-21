@@ -11,9 +11,9 @@
     <a class="logo" href="{{ url_for('index') }}">pokedex</a>
     <nav>
       {% if session.get('user_id') %}
-      <a href="{{ url_for('profile') }}">{{ session['username'] }}</a>
-      <a href="{{ url_for('team') }}">Team</a>
-      <a href="{{ url_for('logout') }}">Log out</a>
+        <a href="{{ url_for('profile') }}">{{ session['username'] }}</a>
+        <a href="{{ url_for('team') }}">Team</a>
+        <a href="{{ url_for('logout') }}">Log out</a>
       {% else %}
         <a href="{{ url_for('login') }}">Log in</a>
         <a class="button" href="{{ url_for('register') }}">Sign up</a>

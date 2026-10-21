@@ -1,82 +1,64 @@
-
 {% extends "base.html" %}
 
 {% block title %}My Team{% endblock %}
 
 {% block content %}
 <section class="pokedex">
-    <header class="pokedex-header">
-        <h1>My Pokémon Team</h1>
-        <p>Your team can contain up to six Pokémon.</p>
-    </header>
+  <header class="pokedex-header">
+    <h1>My Pokémon Team</h1>
+    <p>Your team can contain up to six Pokémon.</p>
+  </header>
 
-    {% if team %}
-        <div id="team-grid">
-            {% for pokemon in team %}
-                <article class="team-member"
-                         data-pokemon-id="{{ pokemon.pokemon_id }}">
-                    <h2>Loading Pokémon...</h2>
-                    <img alt="" width="150">
+  {% if team %}
+    <div id="team-grid">
+      {% for pokemon in team %}
+        <article class="team-member" data-pokemon-id="{{ pokemon.pokemon_id }}">
+          <h2>Loading Pokémon...</h2>
+          <img alt="" width="150">
 
-                    <p class="team-types"></p>
+          <p class="team-types"></p>
 
-                    <form action="{{ url_for('remove_from_team') }}"
-                          method="POST">
-                        <input type="hidden"
-                               name="pokemon_id"
-                               value="{{ pokemon.pokemon_id }}">
+          <form action="{{ url_for('remove_from_team') }}" method="POST">
+            <input type="hidden" name="pokemon_id" value="{{ pokemon.pokemon_id }}">
+            <button type="submit">Remove</button>
+          </form>
+        </article>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Your team is empty. Search for a Pokémon and add it to your team.</p>
+  {% endif %}
 
-                        <button type="submit">Remove</button>
-                    </form>
-                </article>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>Your team is empty, Search for a Pokémon and add it to your team.</p>
-    {% endif %}
-
-    <p><a href="{{ url_for('profile') }}">Back to Pokédex</a></p>
+  <p><a href="{{ url_for('profile') }}">Back to Pokédex</a></p>
 </section>
 
 <script>
-    const members = document.querySelectorAll(".team-member");
+  document.querySelectorAll(".team-member").forEach(async function (member) {
+    const id = member.dataset.pokemonId;
+    const heading = member.querySelector("h2");
+    const image = member.querySelector("img");
+    const types = member.querySelector(".team-types");
 
-    members.forEach(async function (member) {
-        const id = member.dataset.pokemonId;
-        const heading = member.querySelector("h2");
-        const image = member.querySelector("img");
-        const types = member.querySelector(".team-types");
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
 
-        try {
-            const response = await fetch(
-                `https://pokeapi.co/api/v2/pokemon/${id}`
-            );
+      if (!response.ok) {
+        throw new Error("Pokémon could not be loaded.");
+      }
 
-            if (!response.ok) {
-                throw new Error("Pokémon could not be loaded.");
-            }
+      const pokemon = await response.json();
 
-            const pokemon = await response.json();
-
-            heading.textContent =
-                pokemon.name.charAt(0).toUpperCase()
-                + pokemon.name.slice(1);
-
-            image.src =
-                pokemon.sprites.other["official-artwork"].front_default
-                || pokemon.sprites.front_default;
-
-            image.alt = heading.textContent;
-
-            types.textContent = pokemon.types
-                .map(type => type.type.name)
-                .join(" / ");
-
-        } catch (error) {
-            heading.textContent = `Pokémon #${id}`;
-            types.textContent = "Could not load Pokémon information.";
-            console.error(error);
-        }
-    });
+      heading.textContent = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+      image.src =
+        pokemon.sprites.other["official-artwork"].front_default
+        || pokemon.sprites.front_default;
+      image.alt = heading.textContent;
+      types.textContent = pokemon.types.map(type => type.type.name).join(" / ");
+    } catch (error) {
+      heading.textContent = `Pokémon #${id}`;
+      types.textContent = "Could not load Pokémon information.";
+      console.error(error);
+    }
+  });
 </script>
 {% endblock %}

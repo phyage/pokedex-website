@@ -1,145 +1,73 @@
-
 {% extends "base.html" %}
 
 {% block title %}Pokédex{% endblock %}
 
 {% block content %}
-
 <section class="pokedex">
 
-    <header class="pokedex-header">
-    </header>
-
-    <section class="pokemon-search">
-
-        <h2>Search Pokémon</h2>
+  <section class="pokemon-search">
+    <h2>Search Pokémon</h2>
 
     <form id="pokemon-search-form">
+      <div class="search-input-wrapper">
+        <label for="pokemon-search">Pokémon name or Pokédex number</label>
 
-        <div class="search-input-wrapper">
-            <label for="pokemon-search">
-                Pokémon name or Pokédex number
-            </label>
+        <input
+          type="text"
+          id="pokemon-search"
+          name="pokemon"
+          placeholder="e.g. pikachu or 25"
+          autocomplete="off"
+          required
+        >
 
-            <input
-                type="text"
-                id="pokemon-search"
-                name="pokemon"
-                placeholder="e.g. pikachu or 25"
-                autocomplete="off"
-                required
-            >
+        <ul id="pokemon-dropdown" class="search-dropdown" hidden></ul>
+      </div>
 
-            <!-- Dropdown container added here -->
-            <ul id="pokemon-dropdown" class="search-dropdown" hidden></ul>
-        </div>
-
-        <button type="submit">
-            Search
-        </button>
-
-     </form>
+      <button type="submit">Search</button>
+    </form>
 
     <p id="search-error"></p>
+  </section>
 
-    </section>
+  <section id="pokemon-container">
+    <p id="pokemon-placeholder">Search for a Pokémon to get started.</p>
 
+    <article id="pokemon-card" hidden>
+      <header>
+        <h2 id="pokemon-name"></h2>
+        <p>#<span id="pokemon-id"></span></p>
+      </header>
 
-    <section id="pokemon-container">
+      <form action="{{ url_for('add_to_team') }}" method="POST">
+        <input type="hidden" id="team-pokemon-id" name="pokemon_id" value="">
+        <button type="submit">Add to Team</button>
+      </form>
 
-        <p id="pokemon-placeholder">
-            Search for a Pokémon to get started.
-        </p>
+      <div class="pokemon-image">
+        <img id="pokemon-sprite" src="" alt="">
+      </div>
 
+      <section>
+        <h3>Information</h3>
+        <p>Type: <span id="pokemon-types"></span></p>
+        <p>Height: <span id="pokemon-height"></span></p>
+        <p>Weight: <span id="pokemon-weight"></span></p>
+      </section>
 
-        <article id="pokemon-card" hidden>
+      <section>
+        <h3>Base Stats</h3>
+        <ul id="pokemon-stats"></ul>
+      </section>
+    </article>
+  </section>
 
-            <header>
-
-                <h2 id="pokemon-name"></h2>
-
-                <p>
-                    #<span id="pokemon-id"></span>
-                </p>
-
-            </header>
-
-        <form action="{{ url_for('add_to_team') }}" method="POST">
-            <input
-                type="hidden"
-                id="team-pokemon-id"
-                name="pokemon_id"
-                value=""
-            >
-
-            <button type="submit" id="add-to-team-button">
-                Add to Team
-            </button>
-        </form>
-
-
-
-            <div class="pokemon-image">
-
-                <img
-                    id="pokemon-sprite"
-                    src=""
-                    alt=""
-                >
-
-            </div>
-
-
-            <section>
-
-                <h3>Information</h3>
-
-                <p>
-                    Type:
-                    <span id="pokemon-types"></span>
-                </p>
-
-                <p>
-                    Height:
-                    <span id="pokemon-height"></span>
-                </p>
-
-                <p>
-                    Weight:
-                    <span id="pokemon-weight"></span>
-                </p>
-
-            </section>
-
-
-            <section>
-
-                <h3>Base Stats</h3>
-
-                <ul id="pokemon-stats"></ul>
-
-            </section>
-
-        </article>
-
-    </section>
-
-
-    <section id="pokemon-navigation" hidden>
-
-        <button id="previous-pokemon">
-            Previous
-        </button>
-
-        <button id="next-pokemon">
-            Next
-        </button>
-
-    </section>
+  <section id="pokemon-navigation" hidden>
+    <button id="previous-pokemon">Previous</button>
+    <button id="next-pokemon">Next</button>
+  </section>
 
 </section>
 
 <script src="{{ url_for('static', filename='pokemon.js') }}"></script>
-
 {% endblock %}
-

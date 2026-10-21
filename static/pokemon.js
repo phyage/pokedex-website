@@ -1,6 +1,9 @@
+const MAX_POKEMON = 1025;
+
 const searchForm = document.getElementById("pokemon-search-form");
 const searchInput = document.getElementById("pokemon-search");
 const searchError = document.getElementById("search-error");
+const dropdown = document.getElementById("pokemon-dropdown");
 
 const placeholder = document.getElementById("pokemon-placeholder");
 const pokemonCard = document.getElementById("pokemon-card");
@@ -23,6 +26,7 @@ const teamPokemonId = document.getElementById("team-pokemon-id");
 
 let currentPokemonId = null;
 let currentSpeciesId = null;
+let allPokemonList = [];
 
 // Build the forms section and add it to the card
 const formsSection = document.createElement("section");
@@ -35,9 +39,7 @@ const formsList = document.getElementById("pokemon-forms-list");
 // Put the prev/next buttons above the card
 pokemonCard.before(navigation);
 
-
 searchForm.addEventListener("submit", function (event) {
-
     event.preventDefault();
 
     const searchValue = searchInput.value.trim().toLowerCase();
@@ -45,35 +47,21 @@ searchForm.addEventListener("submit", function (event) {
         return;
     }
     getPokemon(searchValue);
-
 });
 
-
 async function getPokemon(pokemon) {
-
     searchError.textContent = "";
 
     try {
-
-        console.log(
-            "Requesting:",
-            `https://pokeapi.co/api/v2/pokemon/${pokemon}`
-        );
-
-        const response = await fetch(
-            `https://pokeapi.co/api/v2/pokemon/${pokemon}`
-        );
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`);
 
         if (!response.ok) {
             throw new Error("Pokémon not found.");
         }
 
         const data = await response.json();
-
         displayPokemon(data);
-
     } catch (error) {
-
         console.error(error);
 
         pokemonCard.hidden = true;
@@ -85,9 +73,7 @@ async function getPokemon(pokemon) {
     }
 }
 
-
 function displayPokemon(pokemon) {
-
     currentPokemonId = pokemon.id;
     teamPokemonId.value = pokemon.id;
     // Species number is used for prev/next so forms don't break the order
@@ -100,66 +86,47 @@ function displayPokemon(pokemon) {
     pokemonSprite.src =
         pokemon.sprites.other["official-artwork"].front_default
         || pokemon.sprites.front_default;
-
-    pokemonSprite.alt =
-        `${capitalise(pokemon.name)} sprite`;
+    pokemonSprite.alt = `${capitalise(pokemon.name)} sprite`;
 
     pokemonTypes.textContent = pokemon.types
         .map(type => capitalise(type.type.name))
         .join(", ");
 
-    pokemonHeight.textContent =
-        `${pokemon.height / 10} m`;
-
-    pokemonWeight.textContent =
-        `${pokemon.weight / 10} kg`;
+    pokemonHeight.textContent = `${pokemon.height / 10} m`;
+    pokemonWeight.textContent = `${pokemon.weight / 10} kg`;
 
     pokemonStats.innerHTML = "";
 
     pokemon.stats.forEach(stat => {
-
         const listItem = document.createElement("li");
-
-        listItem.textContent =
-            `${formatStatName(stat.stat.name)}: ${stat.base_stat}`;
-
+        listItem.textContent = `${formatStatName(stat.stat.name)}: ${stat.base_stat}`;
         pokemonStats.appendChild(listItem);
-
     });
+
     navigation.hidden = false;
-    previousPokemon.disabled =
-        currentSpeciesId <= 1;
-    nextPokemon.disabled =
-        currentSpeciesId >= 1025;
+    previousPokemon.disabled = currentSpeciesId <= 1;
+    nextPokemon.disabled = currentSpeciesId >= MAX_POKEMON;
 
     loadForms(pokemon);
-
 }
 
 previousPokemon.addEventListener("click", function () {
-
     if (currentSpeciesId > 1) {
         getPokemon(currentSpeciesId - 1);
     }
-
 });
 
 nextPokemon.addEventListener("click", function () {
-
-    if (currentSpeciesId < 1025) {
+    if (currentSpeciesId < MAX_POKEMON) {
         getPokemon(currentSpeciesId + 1);
     }
-
 });
 
 function capitalise(name) {
     return name.charAt(0).toUpperCase() + name.slice(1);
-
 }
 
-
 function formatStatName(stat) {
-
     const names = {
         hp: "HP",
         attack: "Attack",
@@ -170,18 +137,14 @@ function formatStatName(stat) {
     };
 
     return names[stat] || capitalise(stat);
-
 }
-
 
 // Fetch all forms of a Pokémon's species and show them in the table
 async function loadForms(pokemon) {
-
     formsList.innerHTML = "";
     formsSection.hidden = true;
 
     try {
-
         const response = await fetch(pokemon.species.url);
         if (!response.ok) return;
         const species = await response.json();
@@ -193,7 +156,6 @@ async function loadForms(pokemon) {
         if (species.varieties.length <= 1) return;
 
         species.varieties.forEach(variety => {
-
             const li = document.createElement("li");
             li.className = "form-item";
             li.textContent = formatFormName(variety.pokemon.name);
@@ -210,30 +172,23 @@ async function loadForms(pokemon) {
             });
 
             formsList.appendChild(li);
-
         });
 
         formsSection.hidden = false;
-
     } catch (err) {
         console.error("Failed to load forms:", err);
     }
-
 }
 
-// remove the - in the middle of the different forms 
+// Remove the - in the middle of the different forms
 function formatFormName(name) {
     return name.split("-").map(capitalise).join(" ");
 }
 
-// Dropdown element references
-const dropdown = document.getElementById("pokemon-dropdown");
-let allPokemonList = []; 
-
 // Fetch the full list of Pokémon names once when the script loads
 async function loadPokemonList() {
     try {
-        const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=1025");
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${MAX_POKEMON}`);
         if (!response.ok) return;
         const data = await response.json();
         allPokemonList = data.results;
@@ -255,8 +210,7 @@ searchInput.addEventListener("input", function () {
     }
 
     // Filter matching Pokémon that start with the letter entered (no limit)
-    const matches = allPokemonList
-        .filter(pokemon => pokemon.name.toLowerCase().startsWith(query))
+    const matches = allPokemonList.filter(pokemon => pokemon.name.startsWith(query));
 
     if (matches.length === 0) {
         hideDropdown();
